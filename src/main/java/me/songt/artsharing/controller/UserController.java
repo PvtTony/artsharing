@@ -19,23 +19,28 @@ public class UserController
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @PostMapping("/api/user/auth")
     public ResponseEntity<?> auth(String email, String password)
     {
 
         try
         {
-            return new ResponseEntity<Object>(userService.auth(email, password), HttpStatus.OK);
+            return new ResponseEntity<Object>(new Result(true, "Success",
+                    userService.auth(email, password)), HttpStatus.OK);
         } catch (AuthException e)
         {
-            return new ResponseEntity<Object>(new Result(false, e.getMessage()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<Object>(new Result(false, e.getMessage()),
+                    HttpStatus.UNAUTHORIZED);
 //            e.printStackTrace();
         }
     }
 
-    @PostMapping
+
+    @PostMapping("/api/user/register")
     public ResponseEntity<?> register(String email, String password)
     {
-        return new ResponseEntity<Object>(userService.register(email, password), HttpStatus.OK);
+//        return new ResponseEntity<Object>(userService.register(email, password), HttpStatus.OK);
+        return new ResponseEntity<Object>(new Result(true, "Success",
+                userService.register(email, password)), HttpStatus.OK);
     }
 }

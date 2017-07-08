@@ -2,20 +2,23 @@ package me.songt.artsharing.vo;
 
 /**
  * Created by tony on 2017/6/27.
+ * Result View Model
  */
 public class Result
 {
-    private boolean isSuccess;
+    private boolean isSuccess = true;
     private String info;
     private Object infoObject;
 
     public Result(boolean isSuccess, String info)
     {
+        this.isSuccess = isSuccess;
         this.info = info;
     }
 
     public Result(boolean isSuccess, String info, Object infoObject)
     {
+        this.isSuccess = isSuccess;
         this.info = info;
         this.infoObject = infoObject;
     }

@@ -3,7 +3,9 @@ package me.songt.artsharing.service.impl;
 import me.songt.artsharing.dao.ArtRepository;
 import me.songt.artsharing.po.ArtEntity;
 import me.songt.artsharing.service.ArtService;
+import me.songt.artsharing.service.UserService;
 import me.songt.artsharing.utils.FileHelper;
+import me.songt.artsharing.vo.ArtViewModel;
 import me.songt.artsharing.vo.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tony on 2017/6/27.
@@ -34,6 +38,9 @@ public class ArtServiceImpl implements ArtService
     //Art Repository
     @Autowired
     private ArtRepository artRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Result upload(String artName, int userId, MultipartFile multipartFile)
@@ -83,20 +90,35 @@ public class ArtServiceImpl implements ArtService
     }
 
     @Override
-    public Page<ArtEntity> getAllUserArts(int userId, String sortField, int pageIndex, int pageSize, boolean desc)
+    public List<ArtViewModel> getAllUserArts(int userId, String sortField, int pageIndex, int pageSize, boolean desc)
     {
         Page<ArtEntity> artEntities = artRepository.findAllByArtAuthor(userId,
                 new PageRequest(pageIndex,
                         pageSize,
                         new Sort(desc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField)));
-        return artEntities;
+        List<ArtViewModel> artViewModels = new ArrayList<>(artEntities.getSize());
+        artEntities.getContent().forEach(artEntity ->
+        {
+            ArtViewModel artViewModel = new ArtViewModel();
+            artViewModel.setArtId(artEntity.getId());
+            artViewModel.setArtName(artEntity.getArtName());
+            artViewModel.setArtPath(artEntity.getArtPath());
+            artViewModel.setArtAuthor(userService.getUserDetailInfo(artEntity.getArtAuthor()));
+            artViewModels.add(artViewModel);
+        });
+        return artViewModels;
     }
 
     @Override
-    public ArtEntity getArtById(int artId)
+    public ArtViewModel getArtById(int artId)
     {
         ArtEntity entity = artRepository.findOne(artId);
-        return entity;
+        ArtViewModel artViewModel = new ArtViewModel();
+        artViewModel.setArtId(entity.getId());
+        artViewModel.setArtName(entity.getArtName());
+        artViewModel.setArtPath(entity.getArtPath());
+        artViewModel.setArtAuthor(userService.getUserDetailInfo(entity.getArtAuthor()));
+        return artViewModel;
     }
 
     @Override

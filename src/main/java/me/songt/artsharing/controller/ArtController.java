@@ -3,6 +3,7 @@ package me.songt.artsharing.controller;
 import me.songt.artsharing.po.ArtEntity;
 import me.songt.artsharing.service.ArtService;
 import me.songt.artsharing.utils.FileHelper;
+import me.songt.artsharing.vo.ArtViewModel;
 import me.songt.artsharing.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by tony on 2017/6/27.
@@ -64,7 +66,7 @@ public class ArtController
                                         @RequestParam(defaultValue = "10") int pageSize,
                                         @RequestParam(defaultValue = "1") int desc)
     {
-        Page<ArtEntity> artEntities = artService.getAllUserArts(userId, sortField, pageIndex, pageSize, desc == 1);
+        List<ArtViewModel> artEntities = artService.getAllUserArts(userId, sortField, pageIndex, pageSize, desc == 1);
         return new ResponseEntity<Object>(artEntities, HttpStatus.OK);
     }
 }

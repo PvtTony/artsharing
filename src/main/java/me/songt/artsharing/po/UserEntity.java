@@ -13,6 +13,7 @@ public class UserEntity
     private int id;
     private String userEmail;
     private String userPass;
+    private String userNick;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -51,6 +52,18 @@ public class UserEntity
         this.userPass = userPass;
     }
 
+    @Basic
+    @Column(name = "user_nick", nullable = false, length = 100)
+    public String getUserNick()
+    {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick)
+    {
+        this.userNick = userNick;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -63,30 +76,30 @@ public class UserEntity
             return false;
         }
 
-        UserEntity that = (UserEntity) o;
+        UserEntity entity = (UserEntity) o;
 
-        if (id != that.id)
+        if (getId() != entity.getId())
         {
             return false;
         }
-        if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null)
+        if (!getUserEmail().equals(entity.getUserEmail()))
         {
             return false;
         }
-        if (userPass != null ? !userPass.equals(that.userPass) : that.userPass != null)
+        if (!getUserPass().equals(entity.getUserPass()))
         {
             return false;
         }
-
-        return true;
+        return getUserNick().equals(entity.getUserNick());
     }
 
     @Override
     public int hashCode()
     {
-        int result = id;
-        result = 31 * result + (userEmail != null ? userEmail.hashCode() : 0);
-        result = 31 * result + (userPass != null ? userPass.hashCode() : 0);
+        int result = getId();
+        result = 31 * result + getUserEmail().hashCode();
+        result = 31 * result + getUserPass().hashCode();
+        result = 31 * result + getUserNick().hashCode();
         return result;
     }
 }
