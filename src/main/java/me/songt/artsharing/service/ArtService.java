@@ -21,7 +21,7 @@ public interface ArtService
 
     ArtViewModel getArtById(int artId);
 
-    Result delete(ArtEntity artEntity);
+    Result delete(int artId);
 
 
 }

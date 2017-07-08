@@ -113,6 +113,10 @@ public class ArtServiceImpl implements ArtService
     public ArtViewModel getArtById(int artId)
     {
         ArtEntity entity = artRepository.findOne(artId);
+        if (entity == null)
+        {
+            return null;
+        }
         ArtViewModel artViewModel = new ArtViewModel();
         artViewModel.setArtId(entity.getId());
         artViewModel.setArtName(entity.getArtName());
@@ -122,12 +126,14 @@ public class ArtServiceImpl implements ArtService
     }
 
     @Override
-    public Result delete(ArtEntity artEntity)
+    public Result delete(int artId)
     {
-        if (artEntity != null)
+        ArtEntity entity = artRepository.findOne(artId);
+        if (entity == null)
         {
-            artRepository.delete(artEntity);
+            return new Result(false, "Art Does Not Exist");
         }
-        return new Result(true, "Delete success", null);
+        artRepository.delete(entity);
+        return new Result(true, "Delete success");
     }
 }

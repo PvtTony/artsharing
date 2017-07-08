@@ -67,6 +67,18 @@ public class ArtController
                                         @RequestParam(defaultValue = "1") int desc)
     {
         List<ArtViewModel> artEntities = artService.getAllUserArts(userId, sortField, pageIndex, pageSize, desc == 1);
-        return new ResponseEntity<Object>(artEntities, HttpStatus.OK);
+        return new ResponseEntity<Object>(new Result(true, "Success", artEntities), HttpStatus.OK);
     }
+
+    @DeleteMapping("/api/art/id/{id}")
+    public ResponseEntity<?> deleteArt(@PathVariable("id") int artId)
+    {
+        Result result = artService.delete(artId);
+        if (!result.isSuccess())
+        {
+            return new ResponseEntity<Object>(result, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
 }
